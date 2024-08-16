@@ -101,13 +101,13 @@ func (s userServiceServer) GetUserSubscription(ctx context.Context, req *pb.GetU
 	}
 
 	var subscriptions = make([]*pb.UserSubscription, 0)
-	if user.UserSubcriptions != nil && len(user.UserSubcriptions) > 0 {
-		for i := 0; i < len(user.UserSubcriptions); i++ {
+	if user.UserSubscriptions != nil && len(user.UserSubscriptions) > 0 {
+		for i := 0; i < len(user.UserSubscriptions); i++ {
 			subscriptions = append(subscriptions, &pb.UserSubscription{
-				ExpiredAt:   user.UserSubcriptions[i].ExpiredAt.Format(util.DateFormatYYYYMMDDTHHmmss),
-				IsActive:    user.UserSubcriptions[i].IsActive,
-				ProductCode: user.UserSubcriptions[i].ProductCode,
-				ProductName: user.UserSubcriptions[i].ProductName,
+				ExpiredAt:   user.UserSubscriptions[i].ExpiredAt.Format(util.DateFormatYYYYMMDDTHHmmss),
+				IsActive:    user.UserSubscriptions[i].IsActive,
+				ProductCode: user.UserSubscriptions[i].ProductCode,
+				ProductName: user.UserSubscriptions[i].ProductName,
 			})
 		}
 	}
@@ -135,13 +135,13 @@ func (s userServiceServer) GetNextProfileExceptIDs(ctx context.Context, req *pb.
 	}
 
 	var subscriptions = make([]*pb.UserSubscription, 0)
-	if user.UserSubcriptions != nil && len(user.UserSubcriptions) > 0 {
-		for i := 0; i < len(user.UserSubcriptions); i++ {
+	if user.UserSubscriptions != nil && len(user.UserSubscriptions) > 0 {
+		for i := 0; i < len(user.UserSubscriptions); i++ {
 			subscriptions = append(subscriptions, &pb.UserSubscription{
-				ExpiredAt:   user.UserSubcriptions[i].ExpiredAt.Format(util.DateFormatYYYYMMDDTHHmmss),
-				IsActive:    user.UserSubcriptions[i].IsActive,
-				ProductCode: user.UserSubcriptions[i].ProductCode,
-				ProductName: user.UserSubcriptions[i].ProductName,
+				ExpiredAt:   user.UserSubscriptions[i].ExpiredAt.Format(util.DateFormatYYYYMMDDTHHmmss),
+				IsActive:    user.UserSubscriptions[i].IsActive,
+				ProductCode: user.UserSubscriptions[i].ProductCode,
+				ProductName: user.UserSubscriptions[i].ProductName,
 			})
 		}
 	}

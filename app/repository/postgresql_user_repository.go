@@ -46,7 +46,7 @@ func (ur *UserRepository) GetUserByEmail(ctx context.Context, email string) (mod
 func (ur *UserRepository) GetUserSubscription(ctx context.Context, email string) (model.User, error) {
 	var user model.User
 	db := ur.DB
-	db = db.Preload("UserSubscription")
+	db = db.Preload("UserSubscriptions")
 	db = db.Joins("JOIN user_subscribed_products on users.id = user_subscribed_products.user_id")
 	err := db.Where(&model.User{Email: email}).Take(&user).Error
 
@@ -60,7 +60,7 @@ func (ur *UserRepository) GetUserSubscription(ctx context.Context, email string)
 func (ur *UserRepository) GetNextProfileExceptIDs(ctx context.Context, ids []int64) (model.User, error) {
 	var user model.User
 	db := ur.DB
-	db = db.Preload("UserSubscription")
+	db = db.Preload("UserSubscriptions")
 	db = db.Joins("JOIN user_subscribed_products on users.id = user_subscribed_products.user_id")
 	err := db.Where("id NOT IN (?)", ids).Take(&user).Error
 
