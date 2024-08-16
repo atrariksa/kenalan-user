@@ -47,7 +47,6 @@ func (ur *UserRepository) GetUserSubscription(ctx context.Context, email string)
 	var user model.User
 	db := ur.DB
 	db = db.Preload("UserSubscriptions")
-	db = db.Joins("JOIN user_subscribed_products on users.id = user_subscribed_products.user_id")
 	err := db.Where(&model.User{Email: email}).Take(&user).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -61,8 +60,7 @@ func (ur *UserRepository) GetNextProfileExceptIDs(ctx context.Context, ids []int
 	var user model.User
 	db := ur.DB
 	db = db.Preload("UserSubscriptions")
-	db = db.Joins("JOIN user_subscribed_products on users.id = user_subscribed_products.user_id")
-	err := db.Where("id NOT IN (?)", ids).Take(&user).Error
+	err := db.Where("users.id NOT IN (?)", ids).Take(&user).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return model.User{}, err
