@@ -61,10 +61,5 @@ func (ur *UserRepository) GetNextProfileExceptIDs(ctx context.Context, ids []int
 	db := ur.DB
 	db = db.Preload("UserSubscriptions")
 	err := db.Where("users.id NOT IN (?)", ids).Take(&user).Error
-
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return model.User{}, err
-	}
-
-	return user, nil
+	return user, err
 }

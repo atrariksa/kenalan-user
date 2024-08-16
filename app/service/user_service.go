@@ -81,14 +81,5 @@ func (us *UserService) GetUserSubscription(ctx context.Context, email string) (m
 }
 
 func (us *UserService) GetNextProfileExceptIDs(ctx context.Context, ids []int64) (model.User, error) {
-	user, err := us.Repo.GetNextProfileExceptIDs(ctx, ids)
-	if err != nil {
-		return model.User{}, err
-	}
-
-	if user.ID == 0 {
-		return model.User{}, errors.New("user not found")
-	}
-
-	return user, nil
+	return us.Repo.GetNextProfileExceptIDs(ctx, ids)
 }

@@ -13,6 +13,8 @@ import (
 	"github.com/atrariksa/kenalan-user/app/service"
 	"github.com/atrariksa/kenalan-user/app/util"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type userServiceServer struct {
@@ -130,8 +132,11 @@ func (s userServiceServer) GetUserSubscription(ctx context.Context, req *pb.GetU
 
 func (s userServiceServer) GetNextProfileExceptIDs(ctx context.Context, req *pb.GetNextProfileExceptIDsRequest) (*pb.GetNextProfileExceptIDsResponse, error) {
 	user, err := s.userService.GetNextProfileExceptIDs(ctx, req.Ids)
+	if err == gorm.ErrRecordNotFound {
+		return nil, status.Error(05, "user not found")
+	}
 	if err != nil {
-		return nil, errors.New("internal error")
+		return nil, err
 	}
 
 	var subscriptions = make([]*pb.UserSubscription, 0)
