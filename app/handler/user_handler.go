@@ -131,7 +131,7 @@ func (s userServiceServer) GetUserSubscription(ctx context.Context, req *pb.GetU
 }
 
 func (s userServiceServer) GetNextProfileExceptIDs(ctx context.Context, req *pb.GetNextProfileExceptIDsRequest) (*pb.GetNextProfileExceptIDsResponse, error) {
-	user, err := s.userService.GetNextProfileExceptIDs(ctx, req.Ids)
+	user, err := s.userService.GetNextProfileExceptIDs(ctx, req.Ids, req.Gender)
 	if err == gorm.ErrRecordNotFound {
 		return nil, status.Error(05, "user not found")
 	}
@@ -165,6 +165,33 @@ func (s userServiceServer) GetNextProfileExceptIDs(ctx context.Context, req *pb.
 	}
 
 	return &response, nil
+}
+
+func (s userServiceServer) UpsertSubscription(ctx context.Context, upsertSubscriptionRequest *pb.UpsertSubscriptionRequest) (*pb.UpsertSubscriptionResponse, error) {
+	expiredAt, err := util.ToDateTimeYYYYMMDDTHHmmss(upsertSubscriptionRequest.ExpiredAt)
+	if err != nil {
+		return nil, errors.New("invalid expired_at")
+	}
+
+	timeNow := util.TimeNow()
+	_, err = s.userService.UpsertSubscription(ctx, model.UserSubscribedProduct{
+		UserID:      upsertSubscriptionRequest.UserId,
+		ExpiredAt:   expiredAt,
+		IsActive:    true,
+		ProductCode: upsertSubscriptionRequest.ProductCode,
+		ProductName: upsertSubscriptionRequest.ProductName,
+		CreatedAt:   timeNow,
+		UpdatedAt:   timeNow,
+	})
+
+	if err != nil {
+		return nil, errors.New("internal error")
+	}
+
+	return &pb.UpsertSubscriptionResponse{
+		Code:    0000,
+		Message: "success",
+	}, nil
 }
 
 func SetupServer() {

@@ -17,7 +17,7 @@ func ToDateTimeYYYYMMDD(dateString string) (dt time.Time, err error) {
 }
 
 func ToDateTimeYYYYMMDDTHHmmss(dateString string) (dt time.Time, err error) {
-	return time.Parse(DateFormatYYYYMMDD, dateString)
+	return time.Parse(DateFormatYYYYMMDDTHHmmss, dateString)
 }
 
 func HashPassword(input string) string {

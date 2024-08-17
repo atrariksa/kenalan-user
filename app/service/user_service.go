@@ -14,7 +14,8 @@ type IUserService interface {
 	GetUserByEmail(ctx context.Context, email string) (model.User, error)
 	CreateUser(ctx context.Context, user model.User) (model.User, error)
 	GetUserSubscription(ctx context.Context, email string) (model.User, error)
-	GetNextProfileExceptIDs(ctx context.Context, ids []int64) (model.User, error)
+	GetNextProfileExceptIDs(ctx context.Context, ids []int64, gender string) (model.User, error)
+	UpsertSubscription(ctx context.Context, userSubscription model.UserSubscribedProduct) (model.UserSubscribedProduct, error)
 }
 
 type UserService struct {
@@ -80,6 +81,19 @@ func (us *UserService) GetUserSubscription(ctx context.Context, email string) (m
 	return user, nil
 }
 
-func (us *UserService) GetNextProfileExceptIDs(ctx context.Context, ids []int64) (model.User, error) {
-	return us.Repo.GetNextProfileExceptIDs(ctx, ids)
+func (us *UserService) GetNextProfileExceptIDs(ctx context.Context, ids []int64, gender string) (model.User, error) {
+	return us.Repo.GetNextProfileExceptIDs(ctx, ids, gender)
+}
+
+func (us *UserService) UpsertSubscription(ctx context.Context, userSubscription model.UserSubscribedProduct) (model.UserSubscribedProduct, error) {
+	err := us.Repo.UpsertSubscription(ctx, &userSubscription)
+	if err != nil {
+		return model.UserSubscribedProduct{}, errors.New("internal error")
+	}
+
+	if userSubscription.ID == 0 {
+		return model.UserSubscribedProduct{}, errors.New("internal error")
+	}
+
+	return userSubscription, nil
 }
