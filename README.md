@@ -1,9 +1,9 @@
 # Kenalan-User
 User Service of Kenalan
 
-# How to run
-- checkout this repo
-- go run main.go
+# Design
+- ![ERD](./docs/UserERD.png)
+- ![doc](./docs/GetUserByEmail-User.png)
 
 # DDL
 
@@ -33,3 +33,7 @@ CREATE TABLE public.user_subscribed_products (
 	CONSTRAINT subscribed_products_pk PRIMARY KEY (id),
 	CONSTRAINT subscribed_products_users_fk FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+
+# How to run
+- checkout this repo
+- go run main.go
