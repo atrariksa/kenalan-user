@@ -12,6 +12,7 @@ import (
 	"github.com/atrariksa/kenalan-user/app/repository"
 	"github.com/atrariksa/kenalan-user/app/service"
 	"github.com/atrariksa/kenalan-user/app/util"
+	"github.com/atrariksa/kenalan-user/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
@@ -196,12 +197,14 @@ func (s userServiceServer) UpsertSubscription(ctx context.Context, upsertSubscri
 
 func SetupServer() {
 	fmt.Println("---User Service---")
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 6021))
+
+	cfg := config.GetConfig()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.ServerConfig.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	db := util.GetDB()
+	db := util.GetDB(cfg)
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 
