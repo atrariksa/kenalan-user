@@ -55,8 +55,12 @@ func (us *UserService) GetUserByEmail(ctx context.Context, email string) (model.
 }
 
 func (us *UserService) CreateUser(ctx context.Context, user model.User) (model.User, error) {
-	user.Password = util.HashPassword(user.Password)
-	err := us.Repo.CreateUser(ctx, &user)
+	hashedPassword, err := util.HashPassword(user.Password)
+	if err != nil {
+		return model.User{}, errors.New("internal error")
+	}
+	user.Password = hashedPassword
+	err = us.Repo.CreateUser(ctx, &user)
 	if err != nil {
 		return model.User{}, errors.New("internal error")
 	}
